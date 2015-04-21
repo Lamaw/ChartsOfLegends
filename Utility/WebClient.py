@@ -6,9 +6,10 @@ class WebClient():
 
     def __init__(self, base_adress, proxy):
         self.base_adress = base_adress
-        proxy_support = urllib2.ProxyHandler({"http":proxy})
-        opener = urllib2.build_opener(proxy_support)
-        urllib2.install_opener(opener)
+        if proxy is not None:
+            proxy_support = urllib2.ProxyHandler({"http":proxy})
+            opener = urllib2.build_opener(proxy_support)
+            urllib2.install_opener(opener)
 
     def get_main_page(self):
         return urllib2.urlopen(self.base_adress)
