@@ -1,6 +1,6 @@
-from WebClient import WebClient
-import xmlParser
-import PageAnalyzer
+from Utility.WebClient import WebClient
+from Utility import xmlParser
+from Utility import PageAnalyzer
 
 #PageAnalyzer Instanciation
 
