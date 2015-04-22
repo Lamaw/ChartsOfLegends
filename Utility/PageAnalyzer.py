@@ -12,6 +12,28 @@ class PageAnalyzer():
             self.champ_number = config["champ_number"]
 
 
+    def extract_champ_stat(self, champion_page, champion_name):
+        champion = Champion(champion_name)
+        html_stat = self.__capture_stat_table(champion_page)
+
+
+        champion.health = self.__read_stat("Health", html_stat)
+        champion.ad = self.__read_stat("Attack_damage", html_stat)
+        champion.health_reg = self.__read_stat("Health_regeneration", html_stat)
+        champion.att_speed = self.__read_stat("Attack_speed", html_stat)
+        champion.mana = self.__read_stat("Mana", html_stat)
+        champion.armor = self.__read_stat("Armor", html_stat)
+        champion.mana_reg = self.__read_stat("Mana_regeneration", html_stat)
+        champion.mag_res = self.__read_stat("Magic_resistance", html_stat)
+        champion.range = self.__read_stat("Range", html_stat)
+        champion.mov_speed = self.__read_stat("Movement_speed", html_stat)
+
+        if champion.mana is None:
+            champion.energy = self.__read_stat("Energy", html_stat)
+            champion.energy_reg = self.__read_stat("Energy_regeneration", html_stat)
+
+        return champion
+
     def extract_champ_list(self, champions_page):
         if self.champ_number is None:
             raise ExeptionsOfLegends.ConfigException("champion number")
@@ -29,31 +51,10 @@ class PageAnalyzer():
                     break
         return names
 
+
+
     def __replace_singlequote_char(self, text):
         return text.replace("%27","'")
-
-
-
-    def extract_champ_stat(self, champion_page, champion_name):
-        champion = Champion(champion_name)
-        html_stat = self.__capture_stat_table(champion_page)
-
-
-        champion.health = self.__read_stat("Health", html_stat)
-        champion.ad = self.__read_stat("Attack_damage", html_stat)
-        champion.health_reg = self.__read_stat("Health_regeneration", html_stat)
-        champion.att_speed = self.__read_stat("Attack_speed", html_stat)
-        champion.mana = self.__read_stat("Mana", html_stat)
-        champion.armor = self.__read_stat("Armor", html_stat)
-        champion.mana_reg = self.__read_stat("Mana_regeneration", html_stat)
-        champion.mag_res = self.__read_stat("Magic_resistance", html_stat)
-        champion.range = self.__read_stat("Range", html_stat)
-        champion.mov_speed = self.__read_stat("Movement_speed", html_stat)
-
-        return champion
-
-
-
 
     def __capture_stat_table(self, champion_page):
         lines = champion_page.split("\n")

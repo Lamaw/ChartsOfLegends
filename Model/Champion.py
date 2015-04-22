@@ -14,4 +14,6 @@ class Champion(object):
         self.mana = None
         self.mana_reg = None
         self.range = None
+        self.energy = None
+        self.energy_reg = None
 
