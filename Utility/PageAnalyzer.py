@@ -1,6 +1,8 @@
 __author__ = 'amahouix'
 
 import ExeptionsOfLegends
+import json
+import os
 from Model.Champion import Champion
 
 
@@ -11,6 +13,7 @@ class PageAnalyzer():
         if "champ_number" in config:
             self.champ_number = config["champ_number"]
 
+    # ---------- PUBLIC ----------------
 
     def extract_champ_stat(self, champion_page, champion_name):
         champion = Champion(champion_name)
@@ -51,7 +54,11 @@ class PageAnalyzer():
                     break
         return names
 
+    def write_champion_stat(self, champion_page, champion_name, path):
+        line = self.__champion_to_json(champion_page, champion_name) + "\n"
+        self.__write_json(line, path)
 
+    # ----------- PRIVATE ---------------
 
     def __replace_singlequote_char(self, text):
         return text.replace("%27","'")
@@ -82,3 +89,31 @@ class PageAnalyzer():
             count += 1
 
         return value
+
+    def __write_json(self, data, path):
+        with open(path, 'a') as outfile:
+            outfile.write(data)
+
+    def __champion_to_json(self, champion_page, champion_name):
+        champion = self.extract_champ_stat(champion_page, champion_name)
+
+        data_stats = json.dumps({'health': champion.health})
+        data_stats += json.dumps({'health_reg': champion.health_reg})
+        if champion.mana is not None:
+            data_stats += json.dumps({'mana': champion.mana})
+            data_stats += json.dumps({'mana_reg': champion.mana_reg})
+        else:
+            data_stats += json.dumps({'energy': champion.energy})
+            data_stats += json.dumps({'energy_reg': champion.energy_reg})
+        data_stats += json.dumps({'ad': champion.ad})
+        data_stats += json.dumps({'att_speed': champion.att_speed})
+        data_stats += json.dumps({'mov_speed': champion.mov_speed})
+        data_stats += json.dumps({'armor': champion.armor})
+        data_stats += json.dumps({'mag_res': champion.mag_res})
+        data_stats += json.dumps({'range': champion.range})
+
+        return json.dumps([champion_name, data_stats])
+
+    def init_champ_file(self, path):
+        os.remove(path)
+        open(path, 'w+').close()

@@ -17,3 +17,5 @@ class Champion(object):
         self.energy = None
         self.energy_reg = None
 
+
+
