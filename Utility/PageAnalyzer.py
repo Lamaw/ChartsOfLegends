@@ -10,8 +10,14 @@ class PageAnalyzer():
 
     def __init__(self, config):
         self.champ_number = None
+        self.data_path = None
         if "champ_number" in config:
             self.champ_number = config["champ_number"]
+        if "data_path" in config:
+            self.data_path = config["data_path"]
+
+
+        self.__init_champ_file()
 
     # ---------- PUBLIC ----------------
 
@@ -114,6 +120,6 @@ class PageAnalyzer():
 
         return json.dumps([champion_name, data_stats])
 
-    def init_champ_file(self, path):
-        os.remove(path)
-        open(path, 'w+').close()
+    def __init_champ_file(self):
+        os.remove(self.data_path)
+        open(self.data_path, 'w+').close()

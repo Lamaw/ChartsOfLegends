@@ -1,3 +1,6 @@
 <parameters>
     <parameter name = "champ_number" value ="124"/>
+    <parameter name = "data_path" value = "D:\\_Dev\\ChartsOfLegends\\Data\\stats.json"/>
+    <parameter name = "url" value = "http://leagueoflegends.wikia.com/wiki"/>
+    <parameter name = "proxy" value = "None"/>
 </parameters>

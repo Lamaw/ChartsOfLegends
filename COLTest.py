@@ -4,42 +4,41 @@ from Utility.PageAnalyzer import PageAnalyzer
 from Utility.JsonAnalyzer import JsonAnalyzer
 from Model.ChartBoard import ChartBoard
 
-"""GLOBAL CONFIGURATION"""
-PROXY = None
-# PROXY = "http://proxy-jf.intel.com:911"
-URL = "http://leagueoflegends.wikia.com/wiki"
 
-storage_path = "D:\\_Dev\\ChartsOfLegends\\Data\\stats.json"
+"""GLOBAL CONFIGURATION"""
+config = ParsedConfig().config
+
+# storage_path = "D:\\_Dev\\ChartsOfLegends\\Data\\stats.json"
 get_data_from_web = False
 
+def retrieve_data_from_web():
 
-"""Objects Instanciation"""
-config = ParsedConfig().config
-if get_data_from_web:
-    client = WebClient(URL, PROXY)
+    client = WebClient(config["url"], config["proxy"])
     analyzer = PageAnalyzer(config)
-    analyzer.init_champ_file(storage_path)
 
     """Build the champion name list"""
     response = client.get_web_page("champions")
     page = response.read()
     champ_name_list = analyzer.extract_champ_list(page)
 
-    """Get the champion stats""" #This is the step to work on as an interface : if get the data from web is on, go with this execution, else, read from local content (TODO)
+    """Get the champion stats"""
     champ_list = list()
     for champ in champ_name_list:
         page = client.get_web_page(champ).read()
-        analyzer.write_champion_stat(page, champ, storage_path)
+        analyzer.write_champion_stat(page, champ, config["data_path"])
+
+
+"""Objects Instanciation"""
+
+if get_data_from_web:
+    retrieve_data_from_web()
 
 parser = JsonAnalyzer(config)
-parser.json_print(storage_path)
-chart_board = parser.build_chart_board(storage_path)
-
-print
+parser.json_print(config["data_path"])
+chart_board = parser.build_chart_board(config["data_path"])
 
 
-    # champion = analyzer.extract_champ_stat(client.get_web_page(champ).read(), champ)
-    # champ_list.append(champion)
+
 
 # """Instanciate the board where stats are processed"""
 # stat_board = ChartBoard(champ_list)
@@ -48,3 +47,6 @@ print
 # means = stat_board.process_means(champ_list)
 # for key, value in means.items():
 #     print str(key), str(value)
+
+
+
